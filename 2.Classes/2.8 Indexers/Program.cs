@@ -10,6 +10,9 @@ namespace Indexers
     {
         static void Main(string[] args)
         {
+            var cookie = new HittCookie();
+            cookie["name"] = "Mosh";
+            Console.WriteLine(cookie["name"]);
         }
     }
 }
