@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace AccessModifiers
 {
+    public class GoldCustomer
+    {
+
+    }
     class Program
     {
         static void Main(string[] args)
         {
+            var customer = new Customer();
         }
     }
 }
