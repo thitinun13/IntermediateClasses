@@ -10,71 +10,101 @@ namespace Workflow
     {
         static void Main(string[] args)
         {
-            WorkFlowEngine workFlow = new WorkFlowEngine();
-            workFlow.AddWorkFlowObject(new VideoUploader());
-            workFlow.AddWorkFlowObject(new CallWebService());
-            workFlow.AddWorkFlowObject(new SendEmail());
-            workFlow.AddWorkFlowObject(new ChangeStatus());
+            WorkFlow workflow = new WorkFlow();
+            workflow.AddWorkFlowObject(new VideoUploader());
+            workflow.AddWorkFlowObject(new CallWebService());
+            workflow.AddWorkFlowObject(new SendEmail());
+            workflow.AddWorkFlowObject(new ChangeStatus());
 
-            workFlow.Run();
+            var engine = new WorkFlowEngine();
+            engine.Run(workflow);
 
-            Console.ReadLine();
+            Console.ReadKey();
         }
     }
-    public interface IWorkFlow
+    public interface ITask
     {
         void Execute();
     }
-    class VideoUploader : IWorkFlow
+    public interface IWorkFlow
     {
-        public void Execute()
-        {
-            Console.WriteLine("Uploading a Video");
-        }
-    }
-    class CallWebService : IWorkFlow
-    {
-        public void Execute()
-        {
-            Console.WriteLine("Calling Web Service");
-        }
-    }
-    class SendEmail : IWorkFlow
-    {
-        public void Execute()
-        {
-            Console.WriteLine("Sending Email");
-        }
-    }
-    class ChangeStatus : IWorkFlow
-    {
-        public void Execute()
-        {
-            Console.WriteLine("Status Changed");
-        }
-    }
-    class WorkFlowEngine
-    {
-        private List<IWorkFlow> T;
+        void Add(ITask task);
+        void Remove(ITask task);
+        IEnumerable<ITask> GetTasks();
 
-        public WorkFlowEngine()
+    }
+    public class WorkFlow : IWorkFlow
+    {
+        private readonly List<ITask> _tasks;
+        public WorkFlow()
         {
-            T = new List<IWorkFlow>();
+            _tasks = new List<ITask>();
+        }
+        public void Add(ITask task)
+        {
+            _tasks.Add(task);
         }
 
-        public void AddWorkFlowObject(IWorkFlow iObject)
+        public void AddWorkFlowObject(ITask iobject)
         {
-            T.Add(iObject);
+            _tasks.Add(iobject);
         }
-        public void RemoveWorkFlowObject(IWorkFlow iObject)
+
+        public void Remove(ITask task)
         {
-            T.Remove(iObject);
+            _tasks.Remove(task);
         }
-        public void Run()
+        public void RemoveWorkFlowObject(ITask iobject)
         {
-            foreach (IWorkFlow I in T)
+            _tasks.Add(iobject);
+        }
+        public IEnumerable<ITask> GetTasks()
+        {
+            return _tasks;
+        }
+    }
+    class VideoUploader : ITask
+    {
+        public void Execute()
+        {
+            Console.WriteLine("Uploading a video");
+        }
+    }
+    class CallWebService : ITask
+    {
+        public void Execute()
+        {
+            Console.WriteLine("call web service...");
+        }
+    }
+    class SendEmail : ITask
+    {
+        public void Execute()
+        {
+            Console.WriteLine("sending email.....");
+        }
+    }
+    class ChangeStatus : ITask
+    {
+        public void Execute()
+        {
+            Console.WriteLine("status change...");
+        }
+    }
+    public class WorkFlowEngine
+    {
+        public void Run(IWorkFlow workFlow)
+        {
+            foreach (ITask I in workFlow.GetTasks())
             {
-                I.Execute();
+                try
+                {
+                    I.Execute();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
     }
