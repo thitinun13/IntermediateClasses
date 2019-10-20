@@ -10,13 +10,14 @@ namespace Casting
     {
         static void Main(string[] args)
         {
-            Text text = new Text();
-            Shape shape = text;
+      //       StreamReader reader = new StreamReader(new MemmoryStream());
+            var list = new ArrayList();
+            list.Add(1);
+            list.Add("Mosh");
+            list.Add(new Text());
 
-            text.Width = 200;
-            shape.Width = 100;
 
-            Console.WriteLine(text.Width);
+            var anotherList = new List<Shape>();
         }
     }
 }
